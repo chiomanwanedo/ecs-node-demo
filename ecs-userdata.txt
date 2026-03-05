@@ -1,2 +1,0 @@
-#!/bin/bash
-echo ECS_CLUSTER=ecs-node-demo-cluster >> /etc/ecs/ecs.config
