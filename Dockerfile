@@ -1,12 +1,7 @@
-FROM node:18-alpine
+FROM httpd:2.4
 
-WORKDIR /app
+RUN echo "ServerName localhost" >> /usr/local/apache2/conf/httpd.conf
 
-COPY package*.json ./
-RUN npm install
+COPY index.html /usr/local/apache2/htdocs/
 
-COPY server.js .
-
-EXPOSE 8080
-
-CMD ["node", "server.js"]
+EXPOSE 80

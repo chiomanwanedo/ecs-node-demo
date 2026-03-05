@@ -1,0 +1,30 @@
+{
+  "family": "ecs-node-demo-task",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["EC2"],
+  "cpu": "256",
+  "memory": "256",
+  "executionRoleArn": "arn:aws:iam::545586474482:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "name": "ecs-node-demo",
+      "image": "545586474482.dkr.ecr.eu-north-1.amazonaws.com/ecs-node-demo:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 80,
+          "protocol": "tcp",
+          "appProtocol": "http"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/ecs-node-demo",
+          "awslogs-region": "eu-north-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ]
+}
