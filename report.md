@@ -100,17 +100,6 @@ This allowed the system to authenticate with AWS and access services such as ECR
 
 A Dockerfile was created to define how the web application should be packaged into a container image.
 
-### Dockerfile
-
-```dockerfile
-FROM httpd:2.4
-
-RUN echo "ServerName localhost" >> /usr/local/apache2/conf/httpd.conf
-
-COPY index.html /usr/local/apache2/htdocs/
-
-EXPOSE 80
-```
 
 ### Step 3: Building the Docker Image
 
@@ -182,11 +171,7 @@ For this project, the **EC2 launch type** was selected. This means that ECS task
 
 ### Creating the Cluster
 
-The cluster was created through the AWS Console by navigating to:
-
-ECS → Clusters → Create Cluster
-
-The same cluster can also be created using the AWS CLI:
+The cluster was created using the AWS CLI:
 
 ```bash
 aws ecs create-cluster --cluster-name ecs-node-demo-cluster
