@@ -36,8 +36,8 @@ The following tools and AWS services were used in this project:
 
 The full source code and project files for this deployment are available in the following GitHub repository:
 
-[GitHub Repository](https://github.com/YOUR-USERNAME/YOUR-REPOSITORY)
-[GitHub Repository](https://github.com/YOUR-USERNAME/YOUR-REPOSITORY)
+[GitHub Repository](https://github.com/chiomanwanedo/ecs-node-demo.git)
+
 
 ### Repository Structure
 
@@ -75,9 +75,9 @@ The architecture of this project consists of a containerized web application dep
 
 The flow of traffic is as follows:
 
-User → Application Load Balancer → ECS Service → EC2 Container Instance → Docker Container → Web Application
+Internet → Application Load Balancer → Target Group → ECS Service → EC2 Container Instance → Docker Container → Web Application
 
-(Insert architectural diagram here)
+![Project Architecture](screenshots/aws_ecs_architecture.png)
 
 
 ## Step 1: Server Setup
@@ -135,7 +135,7 @@ docker build -t ecs-demo-app .
 The container was tested locally to ensure the application works before pushing it to AWS.
 
 ```bash
-docker run -p 8080:8080 ecs-demo-app
+docker run -p 8080:80 ecs-demo-app
 ```
 
 This allowed the application to be accessed locally via:
@@ -185,7 +185,7 @@ Once the push completed successfully, the image became available in the ECR repo
 
 ![ECR Repository](screenshots/ecr-repository.png)
 
-## Step 4: Creating the ECS Cluster (EC2 Launch Type)
+## Step 5: Creating the ECS Cluster (EC2 Launch Type)
 
 After pushing the Docker image to Amazon ECR, the next step was to create an **Amazon Elastic Container Service (ECS) cluster**. The ECS cluster provides the infrastructure where the containers will run.
 
@@ -196,6 +196,12 @@ For this project, the **EC2 launch type** was selected. This means that ECS task
 The cluster was created through the AWS Console by navigating to:
 
 ECS → Clusters → Create Cluster
+
+The same cluster can also be created using the AWS CLI:
+
+```bash
+aws ecs create-cluster --cluster-name ecs-node-demo-cluster
+``` 
 
 The following configuration was used:
 
@@ -218,7 +224,7 @@ The screenshot below shows the ECS cluster with the registered EC2 container ins
 
 ![ECS Cluster](screenshots/ecs-cluster.png)
 
-## Step 5: Creating the ECS Task Definition
+## Step 6: Creating the ECS Task Definition
 
 After creating the ECS cluster, the next step was defining how the container should run. This is done using an **ECS Task Definition**.
 
@@ -281,7 +287,7 @@ The following task definition configuration was used to run the container in the
 }
 ```
 
-The **hostPort value of 0** allows ECS to automatically assign an available port on the EC2 instance. This enables dynamic port mapping which works well with the Application Load Balancer.
+The container port was configured as port **80**, which allows the Application Load Balancer to route HTTP traffic to the running container. ECS automatically handles the networking configuration using the **awsvpc** network mode.
 
 ### ECS Task Definition
 
@@ -289,7 +295,7 @@ The screenshot below shows the ECS task definition configuration used for deploy
 
 ![ECS Task Definition](screenshots/ecs-task-definition.png)
 
-## Step 6: Creating the ECS Service
+## Step 7: Creating the ECS Service
 
 After defining the task definition, the next step was creating an **ECS Service**. An ECS service ensures that a specified number of tasks remain running at all times.
 
@@ -321,7 +327,7 @@ The screenshot below shows the ECS service with a running task.
 
 ![ECS Service Running](screenshots/ecs-service-running.png)
 
-## Step 7: Configuring the Application Load Balancer
+## Step 8: Configuring the Application Load Balancer
 
 An **Application Load Balancer (ALB)** was created to expose the application to the internet.
 
@@ -349,13 +355,17 @@ The screenshot below shows the Application Load Balancer configuration and the a
 ![Application Load Balancer](screenshots/alb-configuration.png)
 
 
-## Step 8: Testing and Validating the Deployment
+## Step 9: Testing and Validating the Deployment
 
 After the ECS service and load balancer were configured successfully, the application was tested using the public DNS name of the Application Load Balancer.
 
 The load balancer routes incoming HTTP requests to the ECS container running the application.
 
 When accessing the ALB DNS name in a web browser, the application responded successfully, confirming that the deployment was successful.
+
+```bash
+curl -i http://<ALB-DNS>
+```
 
 ### Application Running in Browser
 
@@ -364,7 +374,7 @@ The screenshot below shows the deployed application being accessed through the l
 ![Application running](screenshots/application-running-on-alb.png)
 
 
-## Step 9: Security Considerations
+## Step 10: Security Considerations
 
 Security is an important aspect of deploying applications in the cloud. In this project, several AWS security features were used to ensure that the deployment followed best practices.
 
@@ -398,7 +408,7 @@ The following rules were applied:
 These security group rules ensure that only the load balancer can communicate with the ECS containers, improving the overall security of the deployment.
 
 
-## Step 10: Challenges and Lessons Learned
+## Challenges and Lessons Learned
 
 During the deployment process, several challenges were encountered. Troubleshooting these issues helped improve understanding of how ECS and load balancing work.
 
@@ -434,3 +444,11 @@ Overall, this project provided practical experience with containerization, conta
 
 
 The complete project files, including the Dockerfile, task definition, and documentation, are available in the GitHub repositories linked above.
+
+## Appendix: Deployment Commands
+
+For reproducibility and reference, the complete sequence of AWS CLI commands used during this deployment is documented separately.
+
+See the full deployment log in:
+
+docs/ecs-deployment-log.md
