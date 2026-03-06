@@ -1,6 +1,6 @@
 # ECS Application Deployment Project
 
-**Author:** Chioma Vanessa Egwuibe &  Kevwe Collins Enaks
+**Author:**  Kevwe Enakerakpo & Chioma Vanessa Egwuibe 
 
 **Course:** Cloudboosta Training Peer Project
 
@@ -33,8 +33,6 @@ The following tools and AWS services were used in this project:
 - **Security Groups** – Virtual firewall rules used to control inbound and outbound traffic.
 
 ## Project Repository
-
-The full source code and project files for this deployment are available in the following GitHub repository:
 
 [GitHub Repository](https://github.com/chiomanwanedo/ecs-node-demo.git)
 
@@ -98,17 +96,9 @@ aws configure
 This allowed the system to authenticate with AWS and access services such as ECR and ECS.
 
 
-
-
 ## Step 2: Containerizing the Application with Docker
 
 A Dockerfile was created to define how the web application should be packaged into a container image.
-
-The Dockerfile specifies:
-- The base image
-- The application dependencies
-- The port the application listens on
-- The command used to start the application
 
 ### Dockerfile
 
@@ -121,7 +111,6 @@ COPY index.html /usr/local/apache2/htdocs/
 
 EXPOSE 80
 ```
-
 
 ### Step 3: Building the Docker Image
 
@@ -390,7 +379,6 @@ This role allows ECS to:
 - Pull container images from Amazon ECR
 - Send container logs to Amazon CloudWatch Logs
 
-Using IAM roles avoids the need to store sensitive credentials directly inside the application container.
 
 ### Security Groups
 
